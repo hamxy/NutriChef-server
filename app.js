@@ -5,23 +5,24 @@ const logger = require('morgan');
 const dotenv = require('dotenv');
 const database = require('./helpers/mongodb');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const authRouter = require('./routes/authRoutes');
+
 
 const app = express();
 
+// Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Routers
+app.use('/', authRouter);
 
 // Loads .env file contents into process.env
 dotenv.config()
+
 // Connect to database
 database()
 
