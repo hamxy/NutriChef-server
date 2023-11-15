@@ -1,0 +1,22 @@
+Notes of what I did so far:
+
+- default express app with "npm express-generator"
+
+- auth REST route
+    POST signup - creates a new user
+    POST login - login existing user
+    GET signup and login is not needed, as React.js will have them and it will send POST request to API
+
+- auth controllers are in separate files to keep code clean
+
+- User schema contains mongo error handling / validation:
+    email: uses validator to check if email is valid email
+    password: min length 6 characters (default mongo validation)
+
+- auth controller error handling: 
+    - email errors: 
+        * email already exists - check if err.code is 11000
+        * string is not valid email
+    - password errors:
+        * password contains less than 6 characters
+    
