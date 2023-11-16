@@ -1,35 +1,64 @@
 const User = require("../models/User");
 const authErrors = require("../errors/authErrors");
+const jwt = require("jsonwebtoken");
 
-// handle errors
-// https://www.toptal.com/nodejs/node-js-error-handling
+// Create JWT
+const maxAge = 60 * 60 * 24 * 2 // 3 days in seconds
+const createToken = (id) => {
+    return jwt.sign(
+        { id }, 
+        process.env.JWT_SECRET, 
+        {expiresIn: maxAge}
+    );
+}
 
 /**
+ * Signup POST route handles user registering
+ * Take email & password from the request body
+ * Try to create a new user and save it into a database
+ * Try to create JWT and put it into a cookie (login user after registering)
  * 
- * @param {*} req 
- * @param {*} res 
+ * Catch error and send error messages in json
  * 
- * signup POST route handle user registering
+ * @param {Object} req 
+ * @param {Object} res 
  */
 module.exports.signup_post = async (req, res) => {
-    // take email & password from the request body
     const { email, password } = req.body;
-    
-    // try to create a new user and save it into a database
     try {
         const user = await User.create({ email, password });
-        res.status(201).json(user);
+        const token = createToken(user._id)
+        res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge * 1000 });
+        res.status(201).json({ user: user._id });
     } 
     catch (err) {
-        console.log(err);
         const errors = authErrors(err);
         res.status(400).json({ errors });
     }
 }
 
-module.exports.login_post = (req, res) => {
-    console.log(req.body);
-    res.send('new login');
+/**
+ * login POST handles user loging in
+ * Take email & password from the request body
+ * Try to find user in the database (static User.login)
+ * Try to create JWT and put it into a cookie
+ * 
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+module.exports.login_post = async function (req, res) {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.login(email, password);
+        const token = createToken(user._id)
+        res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge * 1000 });
+        res.status(200).json({ user: user._id });
+    }
+    catch (err){
+        console.log(err);
+        res.status(400).send(err.message);
+    }
 }
 
 // iceland: fuel wednesday: 26L (£1.9/L), 8400 isk, 40 km + check phone

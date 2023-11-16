@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const { isEmail } = require("validator");
+const { genSalt, hash, compare } = require("bcrypt");
 
 const userSchema = new Schema({
     email: {
@@ -15,6 +16,53 @@ const userSchema = new Schema({
         minlength: [6, "Minimum password length is 6 characters"]
     }
 })
+
+// HOOKS:
+
+// (mongoose middleware)
+// https://mongoosejs.com/docs/middleware.html
+
+// function(){} - has access to "this", an instance of user
+// () => {} - arrow function does not have access to "this"
+// 
+
+// fire a function before doc saved to db
+userSchema.pre("save", async function(next) {
+    const salt = await genSalt();
+    this.password = await hash(this.password, salt);
+    next();
+})
+
+// fire a function after doc saved to db
+userSchema.post("save", function(doc, next){
+    console.log("New user was created and saved.", doc)
+    next();
+})
+
+/**
+ * Static method to login user:
+ * Find user in db
+ * If user is found:
+ *  * compare unhashed password with hashed password stored in db
+ *  * if passwords match return user
+ * Throw Error otherwise
+ * 
+ * @param {String} email 
+ * @param {String} password 
+ * @returns user
+ */
+
+userSchema.statics.login = async function(email, password) {
+    const user = await this.findOne({ email })
+    if (user) {
+        const auth = await compare(password, user.password);
+        if (auth) {
+            return user
+        }
+        throw Error("Incorrect email or password");
+    }
+    throw Error('Incorrect email or password');
+}
 
 const User = model('user', userSchema);
 

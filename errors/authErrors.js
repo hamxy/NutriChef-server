@@ -1,14 +1,20 @@
 
 // err.code does exist on "unique" property
 
+// handle errors
+// https://www.toptal.com/nodejs/node-js-error-handling
+
+
 /**
  * 
- * @param {*} err 
- * @returns 
- * 
+
  * Returns object with email and pasword error messages:
  * email errors: user exixsts or string is not a valid email
  * password error: password contains less than 6 characters
+ * 
+ * @param {Object} err 
+ * @returns {Object} 
+ * 
  */
 const authErrors = (err) => {
     let errors = { email: "", password: ""};

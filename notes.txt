@@ -20,3 +20,18 @@ Notes of what I did so far:
     - password errors:
         * password contains less than 6 characters
     
+- hash user password with mongoose middleware (pre save) and bcrypt
+
+CSRF attacks:
+https://owasp.org/www-community/attacks/csrf
+
+- cookies & JWT:
+    * use cookie parser to parse cookie data
+    * npm i jsonwebtoken
+
+    POST /register
+    * create a new user
+    * create jwt and store it in a cookie (to instantly log user in)
+
+    POST /login
+    * authenticate user ()
