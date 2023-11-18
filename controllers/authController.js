@@ -20,6 +20,8 @@ const createToken = (id) => {
  * 
  * Catch error and send error messages in json
  * 
+ * 
+ * 
  * @param {Object} req 
  * @param {Object} res 
  */
@@ -46,7 +48,7 @@ module.exports.signup_post = async (req, res) => {
  * @param {Object} req 
  * @param {Object} res 
  */
-module.exports.login_post = async function (req, res) {
+module.exports.login_post = async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -59,6 +61,18 @@ module.exports.login_post = async function (req, res) {
         console.log(err);
         res.status(400).send(err.message);
     }
+}
+
+/**
+ * logout GET handles user login out
+ * Clear jwt cookie
+ * Send a message
+ * 
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+module.exports.logout_get = (req, res) => {
+    res.clearCookie('jwt').status(200).send('Logged out');
 }
 
 // iceland: fuel wednesday: 26L (£1.9/L), 8400 isk, 40 km + check phone
