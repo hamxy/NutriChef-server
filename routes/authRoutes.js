@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const authController = require('../controllers/authController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { requireAuth } = require('../middleware/authMiddleware');
 
 /**
  * Authentication routes 
@@ -24,7 +24,6 @@ router.post('/login', authController.login_post);
 router.get('/logout', authController.logout_get);
 
 
-
 // cookies
 // for tests
 router.get('/read-cookies', (req, res) => {
@@ -34,8 +33,8 @@ router.get('/read-cookies', (req, res) => {
 
 // restricted route
 // for tests
-router.get('/user', authMiddleware, (req, res) => {
-    res.send();
+router.get('/user', requireAuth, (req, res) => {
+    res.status(200).json({ "user": res.locals.user.email });
 })
 
 module.exports = router;

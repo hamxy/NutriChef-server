@@ -22,6 +22,7 @@ const authErrors = (err) => {
     // check if email is already registered
     if (err.code === 11000){
         errors.email = "That email is already registered"
+        console.log( { "error": err.message });
         return errors
     }
 

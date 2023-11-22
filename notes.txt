@@ -41,3 +41,5 @@ https://owasp.org/www-community/attacks/csrf
 
 * make a list of all routes
 * cors to prevent cross-site atcs
+
+

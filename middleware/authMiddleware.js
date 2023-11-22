@@ -1,28 +1,31 @@
 const jwt = require('jsonwebtoken');
+const User = require("../models/User");
 
+// TODO: throw custom Errors: AuthError
 
 /**
  * Method that prevents unauthorised users to access restricted routes
- * Check if cookie contains jwt token
- * Check if jwt token is legitimate (with secret password)
+ * Try to verify token
+ * Find the user in db and add it to res.locals.user
+ * Catch JsonWebTokenError
+ *  if token is not provided (does not exist in req.cookies.jwt)
+ *  if signature is invalid
  * 
  * @param {Object} req 
  * @param {Object} res 
  * @param {Function} next 
  */
-const authMiddleware = async (req, res, next) => {
-    const token = req.cookies.jwt;
-
-    if (token){
-        console.log(token);
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-            console.log(decoded.id);
-            console.log(err);
-            req.id = decoded.id
-        });
+module.exports.requireAuth = async (req, res, next) => {
+    try {
+        const token = req.cookies.jwt;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.locals.user = await User.findById(decoded.id);
+        next();
+    } 
+    catch (err) {
+        next(err);
+        res.status(401).json({ "error": err.message });
     }
-
-    next();
 }
 
-module.exports = authMiddleware;
+module.exports.checkUser
