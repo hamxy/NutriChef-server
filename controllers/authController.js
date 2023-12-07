@@ -2,7 +2,8 @@ const User = require("../models/User");
 const authErrors = require("../errors/authErrors");
 const jwt = require("jsonwebtoken");
 
-// Create JWT
+
+ // Create JWT
 const maxAge = 60 * 60 * 24 * 2 // 3 days in seconds
 const createToken = (id) => {
     return jwt.sign(
@@ -19,7 +20,6 @@ const createToken = (id) => {
  * Try to create JWT and put it into a cookie (login user after registering)
  * 
  * Catch error and send error messages in json
- * 
  * 
  * 
  * @param {Object} req 

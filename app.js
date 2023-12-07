@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const database = require('./helpers/mongodb');
 
 const authRouter = require('./routes/authRoutes');
+const productRouter = require('./routes/productRoutes');
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routers
 app.use('/', authRouter);
+app.use('/product', productRouter);
 
 // Loads .env file contents into process.env
 dotenv.config()
