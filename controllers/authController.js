@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 
  // Create JWT
-const maxAge = 60 * 60 * 24 * 7 // 7 days in seconds
+const maxAge = 60 * 60 * 24 * 1 // 1 day in seconds
 const createToken = (id) => {
     return jwt.sign(
         { id }, 
@@ -26,9 +26,9 @@ const createToken = (id) => {
  * @param {Object} res 
  */
 module.exports.signup_post = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, name, surname, favourites } = req.body;
     try {
-        const user = await User.create({ email, password });
+        const user = await User.create({ email, password, name, surname, favourites });
         const token = createToken(user._id)
         res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge * 1000 });
         res.status(201).json({ user: user._id });
@@ -54,7 +54,7 @@ module.exports.login_post = async (req, res) => {
     try {
         const user = await User.login(email, password);
         const token = createToken(user._id)
-        res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge * 1000 });
+        res.cookie("jwt", token, {httpOnly: true, maxAge: maxAge * 1000 }); // time in ms
         res.status(200).json({ user: user._id });
     }
     catch (err){

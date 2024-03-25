@@ -7,13 +7,10 @@ const database = require('./helpers/mongodb');
 
 const authRouter = require('./routes/authRoutes');
 const productRouter = require('./routes/productRoutes');
+const recipeRouter = require('./routes/recipeRoutes');
 
 
 const app = express();
-
-// Routers
-app.use('/', authRouter);
-app.use('/product', productRouter);
 
 
 // Middleware
@@ -21,6 +18,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Routers
+app.use('/', authRouter);
+app.use('/product', productRouter);
+app.use('/recipe', recipeRouter);
 
 
 // Loads .env file contents into process.env

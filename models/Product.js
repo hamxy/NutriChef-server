@@ -1,9 +1,9 @@
 const { Schema, model } = require("mongoose");
 
 const productSchema = new Schema({
-    name: {
+    title: {
         type: String,
-        required: [true, "Please provide a product name."]
+        required: [true, "Product title not provided."]
     },
     kcal: {
         type: Number,
@@ -29,7 +29,7 @@ const productSchema = new Schema({
 module.exports = model("Product", productSchema)
 
 /**
- * name *
+ * title *
  * kcal *
  * carbs *
  * protein *

@@ -78,5 +78,5 @@ userSchema.statics.login = async function(email, password) {
     throw Error('Incorrect email or password');
 }
 
-const User = model('user', userSchema);
+const User = model('User', userSchema);
 module.exports = User;
