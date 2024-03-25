@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 
  // Create JWT
-const maxAge = 60 * 60 * 24 * 2 // 3 days in seconds
+const maxAge = 60 * 60 * 24 * 7 // 7 days in seconds
 const createToken = (id) => {
     return jwt.sign(
         { id }, 
@@ -75,4 +75,4 @@ module.exports.logout_get = (req, res) => {
     res.clearCookie('jwt').status(200).send('Logged out');
 }
 
-// iceland: fuel wednesday: 26L (£1.9/L), 8400 isk, 40 km + check phone
+// iceland: fuel wednesday: 26L (£1.9/L), 8400 isk

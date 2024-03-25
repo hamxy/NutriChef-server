@@ -13,7 +13,21 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, "Please enter a password"],
-        minlength: [6, "Minimum password length is 6 characters"]
+        minLength: [6, "Minimum password length is 6 characters"]
+    },
+    name: {
+        type: String,
+        required: false,
+        maxLength: 30
+    },
+    surname: {
+        type: String,
+        required: false,
+        maxLength: 50
+    },
+    favourites: {
+        type: [String],
+        required: false,
     }
 })
 
@@ -65,5 +79,4 @@ userSchema.statics.login = async function(email, password) {
 }
 
 const User = model('user', userSchema);
-
 module.exports = User;

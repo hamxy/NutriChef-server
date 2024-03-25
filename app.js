@@ -11,16 +11,17 @@ const productRouter = require('./routes/productRoutes');
 
 const app = express();
 
+// Routers
+app.use('/', authRouter);
+app.use('/product', productRouter);
+
+
 // Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Routers
-app.use('/', authRouter);
-app.use('/product', productRouter);
 
 // Loads .env file contents into process.env
 dotenv.config()
