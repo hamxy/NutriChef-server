@@ -2,7 +2,8 @@ const { Schema, model } = require("mongoose");
 
 const logbookSchema = new Schema({
   user: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   date: {
@@ -12,24 +13,60 @@ const logbookSchema = new Schema({
   breakfast: {
     type: [
       {
-        product: String,
-        quantity: Number,
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
       },
     ],
   },
   lunch: {
     type: [
       {
-        product: String,
-        quantity: Number,
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
       },
     ],
   },
   dinner: {
     type: [
       {
-        product: String,
-        quantity: Number,
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+  },
+  snack: {
+    type: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
       },
     ],
   },
@@ -37,9 +74,3 @@ const logbookSchema = new Schema({
 
 const Logbook = model("logbook", logbookSchema);
 module.exports = Logbook;
-
-//TODO: create schema to avoid
-// type: [{
-//         product: String,
-//         quantity: Number
-//         }]
