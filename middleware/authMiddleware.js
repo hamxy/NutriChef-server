@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
-// TODO: throw custom Errors: AuthError
 
 /**
  * Method that prevents unauthorised users to access restricted routes
@@ -10,22 +8,22 @@ const User = require("../models/User");
  * Catch JsonWebTokenError
  *  if token is not provided (does not exist in req.cookies.jwt)
  *  if signature is invalid
- * 
- * @param {Object} req 
- * @param {Object} res 
- * @param {Function} next 
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
 module.exports.requireAuth = async (req, res, next) => {
-    try {
-        const token = req.cookies.jwt;
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        res.locals.user = await User.findById(decoded.id);
-        next();
-    } 
-    catch (err) {
-        next(err);
-        res.status(401).json({ "error": err.message });
-    }
-}
+  try {
+    const token = req.cookies.jwt;
+    // jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id; // Attach user ID to the request object
+    next();
+  } catch (err) {
+    next(err);
+    res.status(401).json({ error: err.message });
+  }
+};
 
-module.exports.checkUser
+module.exports.checkUser;

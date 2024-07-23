@@ -9,6 +9,7 @@ const cors = require("cors");
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productRoutes");
 const recipeRouter = require("./routes/recipeRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -17,11 +18,11 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(
   cors({
-    origin: "*", // Allow requests from this origin
-    methods: ["GET", "POST"], // Allowed methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    origin: "http://localhost:5173", // Your frontend URL
+    credentials: true, // Allow credentials (cookies)
   })
 );
 
@@ -29,6 +30,7 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/product", productRouter);
 app.use("/recipe", recipeRouter);
+app.use("/profile", userRouter);
 
 // Loads .env file contents into process.env
 dotenv.config();

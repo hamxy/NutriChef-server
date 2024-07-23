@@ -5,7 +5,9 @@ const jwt = require("jsonwebtoken");
 // Create JWT
 const maxAge = 60 * 60 * 24 * 1; // 1 day in seconds
 const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: maxAge });
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: maxAge,
+  });
 };
 
 /**
@@ -30,10 +32,12 @@ module.exports.signup_post = async (req, res) => {
       surname,
     });
     const token = createToken(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(201).json({ user: user._id });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000,
+    });
+    res.status(201).json({ user: "user._id" });
   } catch (err) {
-    const errors = authErrors(err);
     console.log("error");
     console.log(err.message);
     res.status(400).json({ err });
@@ -41,7 +45,7 @@ module.exports.signup_post = async (req, res) => {
 };
 
 /**
- * login POST handles user loging in
+ * login POST handles user logging in
  * Take email & password from the request body
  * Try to find user in the database (static User.login)
  * Try to create JWT and put it into a cookie
@@ -56,24 +60,26 @@ module.exports.login_post = async (req, res) => {
   try {
     const user = await User.login(email, password);
     const token = createToken(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 }); // time in ms
-    res.status(200).json({ user: user._id });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000, // time in ms
+    });
+    res.status(200).json({ message: "Login successful" });
   } catch (err) {
     console.log(err);
-    res.status(400).send(err.message);
+    res.status(400).json({ message: err.message });
   }
 };
 
 /**
- * logout GET handles user login out
- * Clear jwt cookie
- * Send a message
+ * logout GET handles user logging out
+ * Clears jwt cookie
+ * Sends a message
  *
  * @param {Object} req
  * @param {Object} res
  */
 module.exports.logout_get = (req, res) => {
-  res.clearCookie("jwt").status(200).send("Logged out");
+  res.clearCookie("jwt");
+  res.status(200).json({ message: "Logged out" });
 };
-
-// iceland: fuel wednesday: 26L (£1.9/L), 8400 isk
