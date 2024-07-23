@@ -12,4 +12,6 @@ const { requireAuth } = require("../middleware/authMiddleware");
 // POST signup
 router.get("/", requireAuth, userController.user_get);
 
+router.put("/", requireAuth, userController.user_put);
+
 module.exports = router;

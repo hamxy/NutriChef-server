@@ -36,11 +36,10 @@ module.exports.signup_post = async (req, res) => {
       httpOnly: true,
       maxAge: maxAge * 1000,
     });
-    res.status(201).json({ user: "user._id" });
+    res.status(201).json({ message: "Register successful" });
   } catch (err) {
-    console.log("error");
     console.log(err.message);
-    res.status(400).json({ err });
+    res.status(400).json({ message: err.message });
   }
 };
 
@@ -66,7 +65,7 @@ module.exports.login_post = async (req, res) => {
     });
     res.status(200).json({ message: "Login successful" });
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     res.status(400).json({ message: err.message });
   }
 };

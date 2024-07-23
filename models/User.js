@@ -31,6 +31,10 @@ const userSchema = new Schema({
       ref: "Recipe",
     },
   ],
+  weight: {
+    type: Number,
+    required: false,
+  },
 });
 
 // HOOKS:
