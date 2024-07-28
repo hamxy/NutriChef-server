@@ -35,6 +35,10 @@ const userSchema = new Schema({
     type: Number,
     required: false,
   },
+  profilePhoto: {
+    type: String, // Path to the profile photo on the server
+    required: false,
+  },
 });
 
 // HOOKS:

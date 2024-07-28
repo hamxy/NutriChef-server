@@ -26,6 +26,9 @@ app.use(
   })
 );
 
+// Serve static files from the 'uploads' directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Routers
 app.use("/auth", authRouter);
 app.use("/product", productRouter);
