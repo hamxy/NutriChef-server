@@ -6,16 +6,18 @@ const Product = require("../models/Product");
  *
  */
 
-module.exports.product_get = async (req, res) => {
+module.exports.getProductKeyword = async (req, res) => {
   const { keyword } = req.body;
 
   try {
-    const product = await Product.find({
+    const products = await Product.find({
       name: { $regex: `.*${keyword}.*`, $options: "i" },
     });
-    res.send(product);
+    return res.status(200).json(products);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to search products", error });
   }
 };
 
@@ -24,7 +26,7 @@ module.exports.product_get = async (req, res) => {
  *
  */
 
-module.exports.product_post = async (req, res) => {
+module.exports.createProduct = async (req, res) => {
   const {
     title,
     kcal,

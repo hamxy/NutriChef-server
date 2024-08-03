@@ -16,13 +16,24 @@ const User = require("../models/User");
 module.exports.requireAuth = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
-    // jwt.verify(token, process.env.JWT_SECRET);
+    if (!token) {
+      return res
+        .status(401)
+        .json({ authenticated: false, error: "No token provided" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ authenticated: false, error: "User not found" });
+    }
+
     req.userId = decoded.id; // Attach user ID to the request object
     next();
   } catch (err) {
-    next(err);
-    res.status(401).json({ error: err.message });
+    return res.status(401).json({ authenticated: false, error: err.message });
   }
 };
 

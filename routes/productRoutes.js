@@ -1,7 +1,7 @@
-const { Router } = require('express');
+const { Router } = require("express");
 const router = Router();
-const productController = require('../controllers/productController');
-const { requireAuth } = require('../middleware/authMiddleware');
+const productController = require("../controllers/productController");
+const { requireAuth } = require("../middleware/authMiddleware");
 
 /**
  * Product routes 
@@ -11,12 +11,10 @@ const { requireAuth } = require('../middleware/authMiddleware');
  * To keep logic separate from routes handlers are in a separate file (../controllers/).
  */
 
-
- // GET product
-router.get('/', requireAuth, productController.product_get);
+// GET product
+router.post("/search", requireAuth, productController.getProductKeyword);
 
 // POST login
-router.post('/', requireAuth, productController.product_post);
-
+router.post("/", requireAuth, productController.createProduct);
 
 module.exports = router;
