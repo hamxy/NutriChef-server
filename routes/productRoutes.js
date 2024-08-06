@@ -15,6 +15,6 @@ const { requireAuth } = require("../middleware/authMiddleware");
 router.post("/search", requireAuth, productController.getProductKeyword);
 
 // POST login
-router.post("/", requireAuth, productController.createProduct);
+router.post("/create", requireAuth, productController.createProduct);
 
 module.exports = router;

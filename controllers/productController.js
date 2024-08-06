@@ -8,16 +8,17 @@ const Product = require("../models/Product");
 
 module.exports.getProductKeyword = async (req, res) => {
   const { keyword } = req.body;
+  console.log("Searching for keyword:", keyword); // Log the keyword
 
   try {
     const products = await Product.find({
       name: { $regex: `.*${keyword}.*`, $options: "i" },
     });
-    return res.status(200).json(products);
+    console.log("Products found:", products); // Log the found products
+    res.status(200).json(products);
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Failed to search products", error });
+    console.error("Error searching products:", error); // Log any errors
+    res.status(500).json({ message: "Failed to search products", error });
   }
 };
 
@@ -28,7 +29,7 @@ module.exports.getProductKeyword = async (req, res) => {
 
 module.exports.createProduct = async (req, res) => {
   const {
-    title,
+    name,
     kcal,
     carbs,
     protein,
@@ -40,7 +41,7 @@ module.exports.createProduct = async (req, res) => {
 
   try {
     const product = await Product.create({
-      title: title,
+      name: name,
       kcal: kcal,
       carbs: carbs,
       protein: protein,
@@ -50,7 +51,7 @@ module.exports.createProduct = async (req, res) => {
       gramInItem: gramInItem,
     });
 
-    res.status(201).send(`Product ${product.title} was created`);
+    res.status(201).send(`Product ${product.name} was created`);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
