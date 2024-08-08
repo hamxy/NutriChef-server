@@ -1,10 +1,29 @@
 const Recipe = require("../models/Recipe");
 
-/**
- * recipe GET route handles recipe retrieving from the db
- *
- *
- */
+module.exports.getRecipes = async (req, res) => {
+  const { page = 1, limit = 20, search = "", course } = req.query;
+
+  const query = {};
+
+  if (search) {
+    query.title = { $regex: search, $options: "i" }; // Case-insensitive search
+  }
+
+  if (course) {
+    query.course = course;
+  }
+
+  try {
+    const recipes = await Recipe.find(query)
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    res.json({ recipes });
+  } catch (error) {
+    console.error("Error fetching recipes", error);
+    res.status(500).json({ message: "Error fetching recipes" });
+  }
+};
 
 module.exports.getRecipeKeyword = async (req, res) => {
   const { keyword } = req.body;
@@ -27,7 +46,6 @@ module.exports.getRecipeKeyword = async (req, res) => {
 
 /**
  * recipe POST route handles creating a new recipe and saving it into the db
- *
  */
 
 module.exports.createRecipe = async (req, res) => {

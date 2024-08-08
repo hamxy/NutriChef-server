@@ -51,7 +51,7 @@ module.exports.createProduct = async (req, res) => {
       gramInItem: gramInItem,
     });
 
-    res.status(201).send(`Product ${product.name} was created`);
+    res.status(201).json({ message: "Product has been created", product });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
