@@ -2,6 +2,20 @@ const { Router } = require("express");
 const router = Router();
 const recipeController = require("../controllers/recipeController");
 const { requireAuth } = require("../middleware/authMiddleware");
+const multer = require("multer");
+const Recipe = require("../models/Recipe");
+
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 /**
  * Recipe routes 
@@ -14,9 +28,14 @@ const { requireAuth } = require("../middleware/authMiddleware");
 //  /recipe
 
 // GET recipe
-router.get("/", requireAuth, recipeController.recipe_get);
+router.get("/keyword", requireAuth, recipeController.getRecipeKeyword);
 
 // POST login
-router.post("/create", requireAuth, recipeController.createRecipe);
+router.post(
+  "/create",
+  requireAuth,
+  upload.single("photo"),
+  recipeController.createRecipe
+);
 
 module.exports = router;

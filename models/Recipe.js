@@ -65,6 +65,10 @@ const recipeSchema = new Schema({
     required: true,
     default: 0,
   },
+  recipePhoto: {
+    type: String, // Path to the profile photo on the server
+    required: false,
+  },
 });
 
 /**

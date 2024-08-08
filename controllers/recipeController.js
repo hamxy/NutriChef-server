@@ -6,7 +6,7 @@ const Recipe = require("../models/Recipe");
  *
  */
 
-module.exports.recipe_get = async (req, res) => {
+module.exports.getRecipeKeyword = async (req, res) => {
   const { keyword } = req.body;
 
   try {
@@ -41,22 +41,27 @@ module.exports.createRecipe = async (req, res) => {
     cookingTime,
   } = req.body;
   const createdBy = req.userId;
-  console.log(createdBy);
 
   try {
-    const recipe = await Recipe.create({
-      createdBy: createdBy,
-      title: title,
-      description: description,
-      course: course,
-      steps: steps,
-      products: products,
-      preparationTime: preparationTime,
-      cookingTime: cookingTime,
+    const recipe = new Recipe({
+      createdBy,
+      title,
+      description,
+      course,
+      steps: JSON.parse(steps),
+      products: JSON.parse(products),
+      preparationTime,
+      cookingTime,
     });
 
-    res.status(201).send(`Recipe ${recipe.title} was created`);
+    if (req.file) {
+      recipe.photo = req.file.path; // Save the file path in the recipe document
+    }
+
+    await recipe.save();
+
+    res.status(201).json({ message: "Recipe created successfully", recipe });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ message: "Failed to create recipe", error });
   }
 };
