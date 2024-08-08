@@ -29,6 +29,8 @@ const upload = multer({ storage: storage });
 
 router.get("/", requireAuth, recipeController.getRecipes);
 
+router.get("/:id", requireAuth, recipeController.getRecipeById);
+
 // GET recipe keyword
 router.get("/keyword", requireAuth, recipeController.getRecipeKeyword);
 

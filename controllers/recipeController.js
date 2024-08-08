@@ -1,5 +1,31 @@
 const Recipe = require("../models/Recipe");
 
+/**
+ * Get a single recipe by ID
+ */
+module.exports.getRecipeById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const recipe = await Recipe.findById(id).populate([
+      {
+        path: "createdBy",
+        select: "email",
+      },
+      "products.product",
+    ]);
+
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    res.json(recipe);
+  } catch (error) {
+    console.error("Error fetching recipe", error);
+    res.status(500).json({ message: "Error fetching recipe" });
+  }
+};
+
 module.exports.getRecipes = async (req, res) => {
   const { page = 1, limit = 20, search = "", course } = req.query;
 
