@@ -15,9 +15,10 @@ module.exports.recipe_get = async (req, res) => {
     }).populate([
       {
         path: "createdBy",
-        select: "email"
+        select: "email",
       },
-      "products.product"]);
+      "products.product",
+    ]);
     res.json(recipe);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -29,9 +30,17 @@ module.exports.recipe_get = async (req, res) => {
  *
  */
 
-module.exports.recipe_post = async (req, res) => {
-  const { title, description, steps, products } = req.body;
-  const createdBy = res.locals.user;
+module.exports.createRecipe = async (req, res) => {
+  const {
+    title,
+    description,
+    course,
+    steps,
+    products,
+    preparationTime,
+    cookingTime,
+  } = req.body;
+  const createdBy = req.userId;
   console.log(createdBy);
 
   try {
@@ -39,8 +48,11 @@ module.exports.recipe_post = async (req, res) => {
       createdBy: createdBy,
       title: title,
       description: description,
+      course: course,
       steps: steps,
       products: products,
+      preparationTime: preparationTime,
+      cookingTime: cookingTime,
     });
 
     res.status(201).send(`Recipe ${recipe.title} was created`);

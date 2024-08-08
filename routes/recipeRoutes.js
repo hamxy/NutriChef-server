@@ -1,7 +1,7 @@
-const { Router } = require('express');
+const { Router } = require("express");
 const router = Router();
-const recipeController = require('../controllers/recipeController');
-const { requireAuth } = require('../middleware/authMiddleware');
+const recipeController = require("../controllers/recipeController");
+const { requireAuth } = require("../middleware/authMiddleware");
 
 /**
  * Recipe routes 
@@ -13,11 +13,10 @@ const { requireAuth } = require('../middleware/authMiddleware');
 
 //  /recipe
 
- // GET recipe
-router.get('/', requireAuth, recipeController.recipe_get);
+// GET recipe
+router.get("/", requireAuth, recipeController.recipe_get);
 
 // POST login
-router.post('/', requireAuth, recipeController.recipe_post);
-
+router.post("/create", requireAuth, recipeController.createRecipe);
 
 module.exports = router;

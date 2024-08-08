@@ -16,6 +16,11 @@ const recipeSchema = new Schema({
     required: false,
     maxLength: 1000,
   },
+  course: {
+    type: String,
+    required: true,
+    enum: ["breakfast", "lunch", "dinner", "snack"],
+  },
   steps: {
     type: [String],
     required: true,
@@ -33,6 +38,10 @@ const recipeSchema = new Schema({
     },
   ],
   preparationTime: {
+    type: Number,
+    required: true,
+  },
+  cookingTime: {
     type: Number,
     required: true,
   },
@@ -84,7 +93,10 @@ const recipeSchema = new Schema({
  * 165 * 150 / 100 = 247.5 kcal (total chicken)
  * = 304.5 kcal
  */
-recipeSchema.pre("save", async (next) => {
+recipeSchema.pre("save", async function (next) {
+  // Populate the product field in products array
+  await this.populate("products.product");
+
   this.totalCalories = this.products.reduce(
     (acc, current) => acc + (current.product.kcal * current.quantity) / 100,
     0
