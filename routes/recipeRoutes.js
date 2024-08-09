@@ -34,6 +34,13 @@ router.get("/:id", requireAuth, recipeController.getRecipeById);
 // GET recipe keyword
 router.get("/keyword", requireAuth, recipeController.getRecipeKeyword);
 
+router.put(
+  "/:id",
+  requireAuth,
+  upload.single("photo"),
+  recipeController.updateRecipe
+);
+
 // POST login
 router.post(
   "/create",

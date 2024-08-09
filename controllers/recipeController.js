@@ -110,6 +110,57 @@ module.exports.createRecipe = async (req, res) => {
   }
 };
 
+module.exports.updateRecipe = async (req, res) => {
+  const { id } = req.params;
+
+  // When using `multer`, fields are accessed via req.body, but they come as strings, so they might need to be parsed.
+  const {
+    title,
+    description,
+    course,
+    steps,
+    products,
+    preparationTime,
+    cookingTime,
+  } = req.body;
+
+  const userId = req.userId;
+
+  try {
+    const recipe = await Recipe.findById(id);
+
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    if (recipe.createdBy.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to edit this recipe" });
+    }
+
+    // Update the recipe fields
+    recipe.title = title || recipe.title;
+    recipe.description = description || recipe.description;
+    recipe.course = course || recipe.course;
+    recipe.steps = steps ? JSON.parse(steps) : recipe.steps;
+    recipe.products = products ? JSON.parse(products) : recipe.products;
+    recipe.preparationTime = preparationTime || recipe.preparationTime;
+    recipe.cookingTime = cookingTime || recipe.cookingTime;
+
+    if (req.file) {
+      recipe.photo = req.file.path; // Update photo if a new file is uploaded
+    }
+
+    await recipe.save();
+
+    res.status(200).json({ message: "Recipe updated successfully", recipe });
+  } catch (error) {
+    console.error("Error updating recipe", error);
+    res.status(500).json({ message: "Failed to update recipe", error });
+  }
+};
+
 module.exports.deleteRecipe = async (req, res) => {
   try {
     // Find the recipe by ID
