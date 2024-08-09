@@ -42,4 +42,6 @@ router.post(
   recipeController.createRecipe
 );
 
+router.delete("/:id", requireAuth, recipeController.deleteRecipe);
+
 module.exports = router;

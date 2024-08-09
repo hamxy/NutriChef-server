@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Recipe = require("../models/Recipe");
 
 /**
  * User GET route handles retrieving user info from the db
@@ -13,7 +14,10 @@ module.exports.user_get = async (req, res) => {
         .status(404)
         .json({ authenticated: false, error: "User not found" });
     }
-    res.status(200).json({ authenticated: true, user });
+
+    const recipes = await Recipe.find({ createdBy: req.userId });
+
+    res.status(200).json({ authenticated: true, user, recipes });
   } catch (error) {
     res
       .status(500)
@@ -68,12 +72,10 @@ module.exports.upload_photo = async (req, res) => {
     user.profilePhoto = req.file.path; // Save the file path in the user document
     await user.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Profile photo updated successfully",
-        profilePhoto: user.profilePhoto,
-      });
+    res.status(200).json({
+      message: "Profile photo updated successfully",
+      profilePhoto: user.profilePhoto,
+    });
   } catch (error) {
     res.status(500).json({ message: "Failed to update profile photo", error });
   }

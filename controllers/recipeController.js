@@ -109,3 +109,28 @@ module.exports.createRecipe = async (req, res) => {
     res.status(400).json({ message: "Failed to create recipe", error });
   }
 };
+
+module.exports.deleteRecipe = async (req, res) => {
+  try {
+    // Find the recipe by ID
+    const recipe = await Recipe.findById(req.params.id);
+
+    // Check if the recipe exists
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    // Check if the user trying to delete the recipe is the one who created it
+    if (recipe.createdBy.toString() !== req.userId) {
+      return res
+        .status(403)
+        .json({ message: "You do not have permission to delete this recipe" });
+    }
+
+    // If the user is the creator, proceed with deletion
+    await Recipe.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Recipe deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting recipe", error });
+  }
+};
